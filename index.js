@@ -1,7 +1,7 @@
 import * as THREE from './lib/three.module.js';
 class Viewer360 extends HTMLElement {
     onPointerDownMouseX = 0; onPointerDownMouseY = 0;
-	lon = 0; onPointerDownLon = 0;
+	lon = 0;onPointerDownLon = 0;
 	lat = 0;onPointerDownLat = 0;
 	phi = 0;theta = 0;
     onPointerMove = (event) =>{

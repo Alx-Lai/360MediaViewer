@@ -44,9 +44,10 @@ class Viewer360 extends HTMLElement {
         }
     }
     onWindowResize = () =>{
+        if(this.WHfixed)return;
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
-        this.renderer.setSize(window.innerWidth/2, window.innerHeight);
+        this.renderer.setSize(window.innerWidth/2, window.innerHeight/2);
     }
     update = () =>{
         this.lat = Math.max(-85, Math.min(85, this.lat));
@@ -62,6 +63,21 @@ class Viewer360 extends HTMLElement {
         requestAnimationFrame(this.animate);
         this.update();
     }
+    play = () =>{
+        this.videoSource.play();
+    }
+    pause = () =>{
+        this.videoSource.pause();
+    }
+    get currentTime(){
+        return this.videoSource.currentTime;
+    }
+    get duration(){
+        return this.videoSource.duration;
+    }
+    get muted(){
+        return this.videoSource.muted;
+    }
     constructor() {
         super();
         this.attachShadow({mode: 'open'});//shadow root
@@ -70,8 +86,16 @@ class Viewer360 extends HTMLElement {
         this.videoSource = document.createElement('video');
         this.videoSource.src = this.hasAttribute('src') ? this.getAttribute('src') : 'assets/overpass-clip.mp4';
         this.videoSource.setAttribute('controls', 'controls');
+        if(this.hasAttribute('autoplay')){
+            this.videoSource.setAttribute('autoplay', 'autoplay');
+        }
         this.radius = 500;
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+        let near = this.hasAttribute('near') ? parseInt(this.getAttribute('near')) : 1;
+        let far = this.hasAttribute('far') ? parseInt(this.getAttribute('far')) : 1000;
+        this.width = this.hasAttribute('width') ? parseInt(this.getAttribute('width')) : window.innerWidth/2;
+        this.height = this.hasAttribute('height') ? parseInt(this.getAttribute('height')) : window.innerHeight/2;
+        this.WHfixed = this.hasAttribute('width') && this.hasAttribute('height'); 
+        this.camera = new THREE.PerspectiveCamera(75, this.width / this.height, near, far);
         this.scene = new THREE.Scene();
         const geometry = new THREE.SphereGeometry(this.radius, 60, 40);
         geometry.scale(-1, 1, 1);
@@ -80,9 +104,39 @@ class Viewer360 extends HTMLElement {
         const mesh = new THREE.Mesh(geometry, material);
         this.scene.add(mesh);
         this.renderer = new THREE.WebGLRenderer();
-        this.renderer.setPixelRatio(window.devicePixelRatio);
-        this.renderer.setSize(window.innerWidth/2, window.innerHeight/2);
+        this.renderer.setPixelRatio(window.devicePixelRatio);//waiting for test
+        this.renderer.setSize(this.width, this.height);
         wrapper.appendChild(this.renderer.domElement);
+        /*
+        const controls = document.createElement('div');
+        controls.id = 'controls';
+        const progressBar = document.createElement('progress');
+        progressBar.id = 'progress-bar';
+        progressBar.setAttribute('min', '0');
+        progressBar.setAttribute('max', '100');
+        progressBar.setAttribute('value', '0');
+        const playButton = document.createElement('button');
+        playButton.id = 'btnPlay';
+        playButton.className = 'play';
+        const pauseButton = document.createElement('button');
+        pauseButton.id = 'btnStop';
+        pauseButton.className = 'stop';
+        const volumeBar = document.createElement('input');
+        volumeBar.type = 'range';
+        volumeBar.setAttribute('min', '0');
+        volumeBar.setAttribute('max', '1');
+        volumeBar.setAttribute('step', '0.05');
+        volumeBar.setAttribute('value', '1');
+        const muteButton = document.createElement('div');
+        muteButton.id = 'btnMute';
+        muteButton.className = 'mute';
+        const muteButton = document.createElement('div');
+        muteButton.id = 'btnFullscreen';
+        muteButton.className = 'fullscreen';
+        */
+        
+         
+
         wrapper.style.touchAction = 'none';
         wrapper.addEventListener('pointerdown', this.onPointerDown);
         document.addEventListener('wheel', this.onDocumentMouseWheel);

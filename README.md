@@ -2,7 +2,7 @@
 
 #### 預計完工 at Sep.11 2021
 
-#### idea and source: valiant360(https://github.com/flimshaw/Valiant360)
+#### idea : valiant360(https://github.com/flimshaw/Valiant360)
 
 #### using Three.js
 

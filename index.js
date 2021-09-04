@@ -78,10 +78,14 @@ class Viewer360 extends HTMLElement {
     get muted(){
         return this.videoSource.muted;
     }
+    updateProgressBar = () => {
+        let percent = Math.floor(100*this.videoSource.currentTime/this.videoSource.duration);
+        this.progressBar.value = percent;
+    }
     seek = (e) =>{
-        let percent = e.offsetX / this.offsetWidth;
-        this.videoSource.currentTime = percent * this.videoSource.duration;
-        e.target.value = Math.floor(percent / 100);
+        let percent = e.clientX / this.progressBar.offsetWidth;
+        this.videoSource.currentTime = Math.floor(percent * this.videoSource.duration);
+        e.target.value = Math.floor(percent*100);
     }
     constructor() {
         super();
@@ -116,6 +120,7 @@ class Viewer360 extends HTMLElement {
         const controls = document.createElement('div');
         controls.id = 'controls';
         const progressBar = document.createElement('progress');
+        this.progressBar = progressBar;
         progressBar.id = 'progress-bar';
         progressBar.setAttribute('min', '0');
         progressBar.setAttribute('max', '100');
@@ -177,6 +182,7 @@ class Viewer360 extends HTMLElement {
                 muteButton.className = 'mute';
             }
         }, false);
+        this.videoSource.addEventListener('timeupdate', this.updateProgressBar, false);
         progressBar.addEventListener('click', this.seek);
         /*fullScreenButton.addEventListener('click', ()=>{
             
@@ -227,7 +233,7 @@ class Viewer360 extends HTMLElement {
         controls.appendChild(StopButton);
         controls.appendChild(muteButton);
         controls.appendChild(volumeBar);
-        controls.appendChild(fullScreenButton);
+        //controls.appendChild(fullScreenButton);
         wrapper.appendChild(controls);
         this.shadowRoot.append(style, wrapper);
         this.animate();

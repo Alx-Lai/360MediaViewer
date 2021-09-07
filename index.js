@@ -164,9 +164,6 @@ class Viewer360 extends HTMLElement {
         volumeBar.addEventListener('change', (e) => {
             this.videoSource.volume = e.target.value;
         }, false);
-        /*const fullScreenButton = document.createElement('button');
-        fullScreenButton.id = 'btnFullscreen';
-        fullScreenButton.className = 'fullscreen';*/
         
         this.videoSource.addEventListener('play', ()=>{
             playButton.className='pause';
@@ -183,10 +180,6 @@ class Viewer360 extends HTMLElement {
         }, false);
         this.videoSource.addEventListener('timeupdate', this.updateProgressBar, false);
         progressBar.addEventListener('click', this.seek);
-        /*fullScreenButton.addEventListener('click', ()=>{
-            
-        })*/
-        
         
         wrapper.style.width = `${this.width}px`;
         controls.style.width = `${this.width}px`;
@@ -252,7 +245,6 @@ class Viewer360 extends HTMLElement {
         controls.appendChild(progressBar);
         controls.appendChild(muteButton);
         controls.appendChild(volumeBar);
-        //controls.appendChild(fullScreenButton);
         if(this.hasAttribute('controls')){
             wrapper.appendChild(controls);
         }

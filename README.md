@@ -1,12 +1,10 @@
-#### 目標:做一個360media HTML element (包含 360 video /  360 image)
+#### 目標 a 360video HTML element
 
-#### 預計完工 at Sep.11 2021
+#### Idea : valiant360(https://github.com/flimshaw/Valiant360)
 
-#### idea : valiant360(https://github.com/flimshaw/Valiant360)
+#### Using Three.js
 
-#### using Three.js
-
-usage
+##### Usage
 
 ```html
 <head>
@@ -17,4 +15,36 @@ usage
 </body>
 ```
 
-waiting for adding attributes and methods
+##### HTML Attributes
+
+autoplay   default:none
+
+near  default:1
+
+far	
+
+| HTML Attributes | default value      |
+| --------------- | ------------------ |
+| autoplay        | none               |
+| near            | 1                  |
+| far             | 1000               |
+| src             | none               |
+| width           | window.innerWidth  |
+| height          | window.innerHeight |
+| controls        | none               |
+
+
+
+##### Attributes
+
+currentTime
+
+duration
+
+muted
+
+##### Methods
+
+play()
+
+pause()
